@@ -614,9 +614,10 @@ namespace QuickSnip
     //   Ctrl+Print Screen         text extractor
     //   Shift+Print Screen        instant full-screen snip (monitor under the mouse)
     //   Ctrl+Shift+Print Screen   instant snip of the active window
+    //   Alt+Print Screen          instant snip of all monitors
     //   Win+Shift+S               snip bar (optional, replaces Snipping Tool's shortcut)
-    //   Alt+ and Win+Print Screen are left to Windows.
-    enum HotKey { SnipBar, TextExtract, FullScreenNow, WindowNow }
+    //   Win+Print Screen is left to Windows.
+    enum HotKey { SnipBar, TextExtract, FullScreenNow, WindowNow, AllScreensNow }
 
     class KeyHook : IDisposable
     {
@@ -654,10 +655,20 @@ namespace QuickSnip
                 bool isDown = msg == 0x100 || msg == 0x104;
                 bool win = Held(0x5B) || Held(0x5C), ctrl = Held(0x11), shift = Held(0x10), alt = (flags & 0x20) != 0;
 
-                if (!injected && vk == 0x2C /* Print Screen */ && !win && !alt)
+                if (!injected && vk == 0x2C /* Print Screen */ && !win && !(alt && (ctrl || shift)))
                 {
-                    HotKey k = ctrl && shift ? HotKey.WindowNow : ctrl ? HotKey.TextExtract : shift ? HotKey.FullScreenNow : HotKey.SnipBar;
-                    if (isDown) { if (!prtDown) Fire(k); prtDown = true; }
+                    HotKey k = alt ? HotKey.AllScreensNow
+                             : ctrl && shift ? HotKey.WindowNow : ctrl ? HotKey.TextExtract : shift ? HotKey.FullScreenNow : HotKey.SnipBar;
+                    if (isDown)
+                    {
+                        if (!prtDown)
+                        {
+                            Fire(k);
+                            // with Alt held, a dummy key press stops the focused app's menu bar opening when Alt is released
+                            if (alt) { Native.keybd_event(0xE8, 0, 0, UIntPtr.Zero); Native.keybd_event(0xE8, 0, 2, UIntPtr.Zero); }
+                        }
+                        prtDown = true;
+                    }
                     else { if (!prtDown) Fire(k); prtDown = false; }   // some keyboards only send key-up
                     return (IntPtr)1;   // swallow so Windows doesn't open its own capture too
                 }
@@ -2596,7 +2607,18 @@ namespace QuickSnip
                 case HotKey.TextExtract: StartSnip(SnipMode.Text); break;
                 case HotKey.FullScreenNow: SnipFullScreen(); break;
                 case HotKey.WindowNow: SnipActiveWindow(); break;
+                case HotKey.AllScreensNow: SnipAllScreens(); break;
             }
+        }
+
+        // Alt+Print Screen: every monitor in one picture, straight to the clipboard (and save folder).
+        void SnipAllScreens()
+        {
+            if (snipping) return;
+            Bitmap img;
+            try { img = Capture.Screen(SystemInformation.VirtualScreen); }
+            catch (Exception ex) { tray.ShowBalloonTip(5000, "QuickSnip", "Snip failed: " + ex.Message, ToolTipIcon.Error); return; }
+            Deliver(img);
         }
 
         public const string ShortcutText =
@@ -2606,7 +2628,8 @@ namespace QuickSnip
             "   Ctrl+Print Screen  -  text extractor\r\n" +
             "   Shift+Print Screen  -  instant full-screen snip (monitor under the mouse)\r\n" +
             "   Ctrl+Shift+Print Screen  -  instant snip of the active window\r\n" +
-            "   Alt+Print Screen, Win+Print Screen  -  Windows' own (unchanged)\r\n\r\n" +
+            "   Alt+Print Screen  -  instant snip of all monitors\r\n" +
+            "   Win+Print Screen  -  Windows' own (unchanged)\r\n\r\n" +
             "Snip bar\r\n" +
             "   Esc or right-click  -  cancel\r\n" +
             "   M  -  magnifier on/off\r\n\r\n" +

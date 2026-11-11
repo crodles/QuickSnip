@@ -32,12 +32,13 @@ It's a single small `.exe` built with the C# compiler that ships with Windows. N
 | Ctrl+Print Screen | Text extractor |
 | Shift+Print Screen | Instant full-screen snip (monitor under the mouse) |
 | Ctrl+Shift+Print Screen | Instant snip of the active window |
+| Alt+Print Screen | Instant snip of all monitors |
 | Esc / right-click | Cancel a snip |
 | M | Magnifier on/off (while snipping) |
 
 Markup window: `P` pen, `H` highlighter, `E` eraser, `S` shapes, `C` crop, `Ctrl+Z`/`Ctrl+Y` undo/redo, `Ctrl+C` copy, `Ctrl+Shift+C` copy all text, `Ctrl+S` save, `Ctrl+P` print, `Ctrl+N` new snip, `Ctrl+Plus`/`Ctrl+Minus`/`Ctrl+0` zoom.
 
-Alt+Print Screen and Win+Print Screen keep Windows' own behavior.
+Win+Print Screen keeps Windows' own behavior.
 
 ## Download
 
