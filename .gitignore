@@ -1,0 +1,3 @@
+# Built programs are shared as GitHub Release downloads, not committed
+*.exe
+*.pdb
