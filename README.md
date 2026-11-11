@@ -30,9 +30,9 @@ It's a single small `.exe` built with the C# compiler that ships with Windows. N
 | Print Screen | Snip bar |
 | Win+Shift+S | Snip bar (can be turned off in Settings) |
 | Ctrl+Print Screen | Text extractor |
-| Shift+Print Screen | Instant full-screen snip (monitor under the mouse) |
-| Ctrl+Shift+Print Screen | Instant snip of the active window |
-| Alt+Print Screen | Instant snip of all monitors |
+| Shift+Print Screen | Instant snip of all monitors |
+| Alt+Print Screen | Instant snip of the active window |
+| Ctrl+Shift+Print Screen | Instant snip of the monitor under the mouse |
 | Esc / right-click | Cancel a snip |
 | M | Magnifier on/off (while snipping) |
 

@@ -612,9 +612,9 @@ namespace QuickSnip
     // ------------------------------------------------------------------ keyboard shortcuts (low-level hook)
     //   Print Screen              snip bar
     //   Ctrl+Print Screen         text extractor
-    //   Shift+Print Screen        instant full-screen snip (monitor under the mouse)
-    //   Ctrl+Shift+Print Screen   instant snip of the active window
-    //   Alt+Print Screen          instant snip of all monitors
+    //   Shift+Print Screen        instant snip of all monitors
+    //   Alt+Print Screen          instant snip of the active window
+    //   Ctrl+Shift+Print Screen   instant snip of the monitor under the mouse
     //   Win+Shift+S               snip bar (optional, replaces Snipping Tool's shortcut)
     //   Win+Print Screen is left to Windows.
     enum HotKey { SnipBar, TextExtract, FullScreenNow, WindowNow, AllScreensNow }
@@ -657,8 +657,8 @@ namespace QuickSnip
 
                 if (!injected && vk == 0x2C /* Print Screen */ && !win && !(alt && (ctrl || shift)))
                 {
-                    HotKey k = alt ? HotKey.AllScreensNow
-                             : ctrl && shift ? HotKey.WindowNow : ctrl ? HotKey.TextExtract : shift ? HotKey.FullScreenNow : HotKey.SnipBar;
+                    HotKey k = alt ? HotKey.WindowNow
+                             : ctrl && shift ? HotKey.FullScreenNow : ctrl ? HotKey.TextExtract : shift ? HotKey.AllScreensNow : HotKey.SnipBar;
                     if (isDown)
                     {
                         if (!prtDown)
@@ -2626,9 +2626,9 @@ namespace QuickSnip
             "   Print Screen  -  snip bar\r\n" +
             "   Win+Shift+S  -  snip bar (can be turned off in Settings)\r\n" +
             "   Ctrl+Print Screen  -  text extractor\r\n" +
-            "   Shift+Print Screen  -  instant full-screen snip (monitor under the mouse)\r\n" +
-            "   Ctrl+Shift+Print Screen  -  instant snip of the active window\r\n" +
-            "   Alt+Print Screen  -  instant snip of all monitors\r\n" +
+            "   Shift+Print Screen  -  instant snip of all monitors\r\n" +
+            "   Alt+Print Screen  -  instant snip of the active window\r\n" +
+            "   Ctrl+Shift+Print Screen  -  instant snip of the monitor under the mouse\r\n" +
             "   Win+Print Screen  -  Windows' own (unchanged)\r\n\r\n" +
             "Snip bar\r\n" +
             "   Esc or right-click  -  cancel\r\n" +
